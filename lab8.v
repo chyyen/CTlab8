@@ -53,7 +53,6 @@ module Lab8(
 		end
 	end
 
-/*
     sonic_top B(
         .clk(clk), 
         .rst(rst), 
@@ -61,6 +60,5 @@ module Lab8(
         .Trig(trig),
         .distance(distance)
     );
-*/
 
 endmodule

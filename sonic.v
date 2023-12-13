@@ -75,7 +75,8 @@ module PosCounter(clk, rst, echo, distance_count);
     assign finish = ~echo_reg1 & echo_reg2;
 
     // TODO: trace the code and calculate the distance, output it to <distance_count>
-    
+    assign distance_count = distance_register * 0.01715;
+
 endmodule
 
 // send trigger signal to sensor
@@ -102,6 +103,13 @@ module TrigSignal(clk, rst, trig);
         next_trig = trig;
         next_count = count + 1;
         // TODO: set <next_trig> and <next_count> to let the sensor work properly
+        if(count < 24'd1000) begin
+            next_trig = 1;
+        end
+        else if(count == 24'd1000) begin
+            next_trig = 0;
+            next_count = 0;
+        end
     end
 endmodule
 
