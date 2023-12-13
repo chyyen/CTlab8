@@ -20,10 +20,10 @@ module motor(
     assign pwm = {left_pwm,right_pwm};
 
     // TODO: trace the rest of motor.v and control the speed and direction of the two motors
-	// assign l_IN = (l_mode == 0 || l_mode == 3 ? 0 : (l_mode == 1 ? 1 : 2));
-	// assign r_In = (r_mode == 0 || r_mode == 3 ? 0 : (r_mode == 1 ? 1 : 2)); 
-	assign l_IN = 1;
-	assign r_IN = 1;
+	assign l_IN = (l_mode == 0 || l_mode == 3 ? 0 : (l_mode == 1 ? 1 : 2));
+	assign r_IN = (r_mode == 0 || r_mode == 3 ? 0 : (r_mode == 1 ? 2 : 1)); 
+	// assign l_IN = 1;
+	// assign r_IN = 1;
 
     
 endmodule
