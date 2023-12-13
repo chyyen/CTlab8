@@ -37,7 +37,12 @@ module Lab8(
     );
 
 	always@(posedge clk) begin
-		if(left_track ^ right_track == 0) begin
+        // sonic part here
+        if (distance < 20) begin
+            l_mode <= 0;
+            r_mode <= 0;
+        end
+		else if(left_track ^ right_track == 0) begin
 			if(left_track) begin
 				l_mode <= 1;
 				r_mode <= (mid_track ? 1 : 2);
