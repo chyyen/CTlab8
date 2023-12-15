@@ -36,34 +36,46 @@ module Lab8(
         .r_IN({IN3, IN4})
     );
 
-	always@(posedge clk) begin
-        // sonic part here
-        if (distance < 20) begin
-            l_mode <= 0;
-            r_mode <= 0;
-        end
-		else if(left_track ^ right_track == 0) begin
-			if(left_track) begin
-				l_mode <= 1;
-				r_mode <= (mid_track ? 1 : 2);
-			end
-			else begin
-				l_mode <= (mid_track ? 2 : 0);
-				r_mode <= (mid_track ? 2 : 0);
-			end
-		end		
-		else begin
-			l_mode <= (left_track ? 1 : 0);
-			r_mode <= (left_track ? 0 : 1);	
-		end
-	end
-
+    reg stop = 0;
+    wire trig;
+    wire [19:0] distance;
     sonic_top B(
-        .clk(clk), 
-        .rst(rst), 
-        .Echo(echo), 
+        .clk(clk),
+        .rst(rst),
+        .Echo(echo),
         .Trig(trig),
         .distance(distance)
     );
+
+    always @(*) begin
+        if (distance <= 15) begin
+            stop <= 1;
+        end else begin
+            stop <= 0;
+        end
+    end
+
+	always@(posedge clk) begin
+        // sonic part here
+        if (stop) begin
+            l_mode <= 0;
+            r_mode <= 0;
+        end else begin
+            if(left_track ^ right_track == 0) begin
+                if(left_track) begin
+                    l_mode <= 1;
+                    r_mode <= (mid_track ? 1 : 2);
+                end
+                else begin
+                    l_mode <= (mid_track ? 2 : 0);
+                    r_mode <= (mid_track ? 2 : 0);
+                end
+            end
+            else begin
+                l_mode <= (left_track ? 1 : 0);
+                r_mode <= (left_track ? 0 : 1);
+            end
+        end
+	end
 
 endmodule
