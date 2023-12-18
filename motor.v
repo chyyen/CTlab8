@@ -14,14 +14,14 @@ module motor(
     reg [9:0]left_motor, right_motor;
     wire left_pwm, right_pwm;
 
-    motor_pwm m0(clk, rst, 10'd700, left_pwm);
-    motor_pwm m1(clk, rst, 10'd700, right_pwm);
+    motor_pwm m0(clk, rst, 10'd650, left_pwm);
+    motor_pwm m1(clk, rst, 10'd650, right_pwm);
 
     assign pwm = {left_pwm,right_pwm};
 
     // TODO: trace the rest of motor.v and control the speed and direction of the two motors
-	assign l_IN = (l_mode == 0 || l_mode == 3 ? 0 : (l_mode == 1 ? 2 : 1));
-	assign r_IN = (r_mode == 0 || r_mode == 3 ? 0 : (r_mode == 1 ? 1 : 2)); 
+	assign l_IN = (l_mode == 0 || l_mode == 3 ? 0 : (l_mode == 1 ? 1 : 2));
+	assign r_IN = (r_mode == 0 || r_mode == 3 ? 0 : (r_mode == 1 ? 2 : 1));
 	// assign l_IN = 1;
 	// assign r_IN = 1;
 

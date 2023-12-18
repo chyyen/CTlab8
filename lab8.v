@@ -49,7 +49,8 @@ module Lab8(
 
     always @(*) begin
         if (distance <= 15) begin
-            stop <= 1;
+            //stop <= 1;
+            stop <= 0;
         end else begin
             stop <= 0;
         end
@@ -64,16 +65,16 @@ module Lab8(
             if(left_track ^ right_track == 0) begin
                 if(left_track) begin
                     l_mode <= 1;
-                    r_mode <= (mid_track ? 1 : 2);
+                    r_mode <= 1;
                 end
                 else begin
-                    l_mode <= (mid_track ? 2 : 0);
-                    r_mode <= (mid_track ? 2 : 0);
+                    l_mode <= (mid_track ? 1 : 0);
+                    r_mode <= (mid_track ? 1 : 0);
                 end
             end
             else begin
-                l_mode <= (left_track ? 1 : 0);
-                r_mode <= (left_track ? 0 : 1);
+                l_mode <= (right_track ? 1 : 0);
+                r_mode <= (!right_track ? 1 : 0);
             end
         end
 	end
