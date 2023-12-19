@@ -14,8 +14,8 @@ module motor(
     reg [9:0]left_motor, right_motor;
     wire left_pwm, right_pwm;
 
-    motor_pwm m0(clk, rst, 10'd650, left_pwm);
-    motor_pwm m1(clk, rst, 10'd650, right_pwm);
+    motor_pwm m0(clk, rst, 10'd700, left_pwm);
+    motor_pwm m1(clk, rst, 10'd700, right_pwm);
 
     assign pwm = {left_pwm,right_pwm};
 

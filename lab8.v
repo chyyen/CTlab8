@@ -50,8 +50,7 @@ module Lab8(
 
     always @(*) begin
         if (distance <= 15) begin
-            //stop <= 1;
-            stop <= 0;
+            stop <= 1;
         end else begin
             stop <= 0;
         end
