@@ -11,7 +11,8 @@ module Lab8(
     output IN3, 
     output IN4,
     output left_pwm,
-    output right_pwm
+    output right_pwm,
+    output [15:0] _led
     // You may modify or add more input/ouput yourself.
 );
     // We have connected the motor and sonic_top modules in the template file for you.
@@ -78,5 +79,8 @@ module Lab8(
             end
         end
 	end
+
+    // use led to check track sensor
+    assign _led = {stop, 12'b0, left_track, mid_track, right_track};
 
 endmodule
