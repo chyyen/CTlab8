@@ -17,7 +17,7 @@ module Lab8(
 );
     // We have connected the motor and sonic_top modules in the template file for you.
     // TODO: control the motors with the information you get from ultrasonic sensor and 3-way track sensor.
-	/*
+    /*
 		mode =
 		0: motor off
 		1: forward
@@ -25,13 +25,13 @@ module Lab8(
 		3: motor off
 	*/
 
-	reg [1:0] r_mode, l_mode;
+    reg [1:0] r_mode, l_mode;
 
     motor A(
         .clk(clk),
         .rst(rst),
         .l_mode(l_mode),
-		.r_mode(r_mode),
+        .r_mode(r_mode),
         .pwm({left_pwm, right_pwm}),
         .l_IN({IN1, IN2}),
         .r_IN({IN3, IN4})
@@ -48,7 +48,7 @@ module Lab8(
         .distance(distance)
     );
 
-    always @(*) begin
+    always @( * ) begin
         if (distance <= 15) begin
             stop <= 1;
         end else begin
@@ -56,30 +56,82 @@ module Lab8(
         end
     end
 
-	always@(posedge clk) begin
+    reg turning = 0;
+    reg [25:0] count = 0;
+    reg [1:0] last_dir = 0;
+
+    always@(posedge clk) begin
         // sonic part here
         if (stop) begin
             l_mode <= 0;
             r_mode <= 0;
+            count <= 0;
+            turning <= 0;
+        end else if(turning) begin
+            count <= count + 1;
+            l_mode <= l_mode;
+            r_mode <= r_mode;
+            if(count[25]) begin
+                turning <= 0;
+                count <= 0;
+            end
         end else begin
-            if(left_track ^ right_track == 0) begin
-                if(left_track) begin
+            count <= 0;
+            // white => 1, black => 0
+            case ({left_track, mid_track, right_track})
+                3'b000: begin
+                    l_mode <= 1;
+                    r_mode <= 1;
+                    last_dir <= 0;
+                end
+                3'b001: begin
+                    l_mode <= 2;
+                    r_mode <= 1;
+                    turning <= 1;
+                    last_dir <= 2;
+                end
+                3'b010: begin
+                    l_mode <= 1;
+                    r_mode <= 1;
+                    last_dir <= 0;
+                end
+                3'b011: begin
+                    l_mode <= 2;
+                    r_mode <= 1;
+                    last_dir <= 0;
+                end
+                3'b100: begin
+                    l_mode <= 1;
+                    r_mode <= 2;
+                    turning <= 1;
+                    last_dir <= 1;
+                end
+                3'b101: begin
                     l_mode <= 1;
                     r_mode <= 1;
                 end
-                else begin
-                    l_mode <= (mid_track ? 1 : 0);
-                    r_mode <= (mid_track ? 1 : 0);
+                3'b110: begin
+                    l_mode <= 1;
+                    r_mode <= 2;
+                    last_dir <= 0;
                 end
-            end
-            else begin
-                l_mode <= (right_track ? 1 : 0);
-                r_mode <= (!right_track ? 1 : 0);
-            end
+                3'b111: begin
+                    if (last_dir == 0) begin
+                        l_mode <= 1;
+                        r_mode <= 1;
+                    end else if (last_dir == 2) begin
+                        l_mode <= 2;
+                        r_mode <= 1;
+                    end else begin
+                        l_mode <= 1;
+                        r_mode <= 2;
+                    end
+                end
+            endcase
         end
-	end
+    end
 
     // use led to check track sensor
-    assign _led = {stop, 12'b0, left_track, mid_track, right_track};
+    assign _led = {stop, 12'b0, right_track, mid_track, left_track};
 
 endmodule
